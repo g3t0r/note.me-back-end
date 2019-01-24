@@ -35,7 +35,7 @@ public class NoteMeApplication {
 				return;
 			}
 		    Role role = roleRepository.getOneByName("USER").orElseThrow(() -> new NullPointerException("Role == null"));
-		    User user = new User("test", passwordEncoder.encode("test"), true, true, true, true);
+		    User user = new User("test", "test@test.test", passwordEncoder.encode("test"), true, true, true, true);
 			List<Role> roles = new ArrayList<>();
 			roles.add(role);
 		    user.setRoles(roles);

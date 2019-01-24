@@ -14,6 +14,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String login;
+    private String email;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -40,9 +41,10 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String login, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled) {
+    public User(String login, String email, String password,  boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled) {
         this.login = login;
         this.password = password;
+        this.email = email;
         this.accountNonExpired = accountNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.credentialsNonExpired = credentialsNonExpired;
@@ -95,6 +97,14 @@ public class User implements UserDetails {
         this.login = login;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -127,6 +137,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", email='" + email + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", accountNonExpired=" + accountNonExpired +

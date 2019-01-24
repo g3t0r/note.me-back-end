@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class RegisterController {
     @PostMapping(produces = "application/json")
     @ResponseBody
     public ResponseEntity registerUser(@RequestParam(name = "login", required = true) @NotNull @Size(min = 1) String login,
+                                       @RequestParam(name = "email", required = true) @NotNull @Email String email,
                                        @RequestParam(name = "password", required = true) @NotNull @Size(min = 4) String password) {
 
 
@@ -43,7 +45,7 @@ public class RegisterController {
         }
 
 
-        userRepository.save(new User(login, encoder.encode(password), true, true, true, true));
+        userRepository.save(new User(login, email, encoder.encode(password), true, true, true, true));
         Optional<User> createdUser = userRepository.getOneByLogin(login);
         if (createdUser.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).build();
