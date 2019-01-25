@@ -23,10 +23,10 @@ public class LoginController {
     @Autowired
     PasswordEncoder encoder;
 
-    @GetMapping("/login")
-    public String openLoginPage() {
-        return "forward:/index.html";
-    }
+//    @GetMapping("/login")
+//    public String openLoginPage() {
+//        return "forward:/index.html";
+//    }
 
 //    @PostMapping("/login")
 //    public Authentication authenticate(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {

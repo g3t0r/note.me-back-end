@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/register")
+@RequestMapping("/users/register")
 @Validated
 public class RegisterController {
 
