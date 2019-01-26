@@ -1,0 +1,4 @@
+def profiles = 'dev'
+bootRun {
+    systemProperty "spring.profiles.active", profiles
+}

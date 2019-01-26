@@ -39,3 +39,10 @@ dependencies {
 
 
 }
+
+if (project.hasProperty('dev')) {
+	apply from: 'gradle/profile_dev.gradle'
+} else {
+	apply from: 'gradle/profile_prod.gradle'
+}
+
