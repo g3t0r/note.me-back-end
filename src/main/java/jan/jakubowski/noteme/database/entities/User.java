@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String login;
     private String email;
     private String password;
@@ -81,7 +81,7 @@ public class User implements UserDetails {
         return enabled;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -131,6 +131,14 @@ public class User implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Collection<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Collection<Note> notes) {
+        this.notes = notes;
     }
 
     @Override
