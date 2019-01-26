@@ -33,5 +33,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('org.springframework.security:spring-security-test')
 	compile group: 'com.auth0', name: 'java-jwt', version: '3.4.0'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+
 
 }

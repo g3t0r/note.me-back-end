@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/users/register", "/login")
                 .permitAll()
-                .antMatchers("/pinboard", "/test")
+                .anyRequest()
                 .authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
