@@ -1,20 +1,14 @@
 package jan.jakubowski.noteme.controllers;
 
-import jan.jakubowski.noteme.database.entities.User;
-import jan.jakubowski.noteme.database.repositories.UserRepository;
+import jan.jakubowski.noteme.exceptions.UserAlreadyExistException;
+import jan.jakubowski.noteme.services.UserService;
+import jan.jakubowski.noteme.services.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users/register")
@@ -22,39 +16,28 @@ import java.util.Optional;
 public class RegisterController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
+    UserService userService;
 
     @GetMapping
     public String getRegisterForm() {
         return "forward:/index.html";
     }
 
-    @PostMapping(produces = "application/json")
+    @PostMapping
     @ResponseBody
-    public ResponseEntity registerUser(@RequestParam(name = "login", required = true) @NotNull @Size(min = 1) String login,
-                                       @RequestParam(name = "email", required = true) @NotNull @Email String email,
-                                       @RequestParam(name = "password", required = true) @NotNull @Size(min = 4) String password) {
-
-
-        Optional<User> existingUser = userRepository.getOneByLogin(login);
-        if (existingUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{'message':'Login already in use'}");
-        }
-
-
-        userRepository.save(new User(login, email, encoder.encode(password), true, true, true, true));
-        Optional<User> createdUser = userRepository.getOneByLogin(login);
-        if (createdUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDTO registerUser(@RequestBody UserDTO userDTO) {
+        return userService.addUser(userDTO);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity handleException() {
-        return ResponseEntity.badRequest().build();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Validation failed")
+    public void validationFailed() {
     }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "User already exist")
+    public void userAlreadyExist() {
+    }
+
 }
