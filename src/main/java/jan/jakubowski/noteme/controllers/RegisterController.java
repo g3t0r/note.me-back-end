@@ -18,11 +18,6 @@ public class RegisterController {
     @Autowired
     UserService userService;
 
-    @GetMapping
-    public String getRegisterForm() {
-        return "forward:/index.html";
-    }
-
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
