@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/users/register")
+@RequestMapping("/api/users/register")
 @Validated
 public class RegisterController {
 
