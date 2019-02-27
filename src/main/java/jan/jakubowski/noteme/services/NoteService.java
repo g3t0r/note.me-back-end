@@ -8,6 +8,8 @@ import jan.jakubowski.noteme.exceptions.UserDoesNotExistException;
 import jan.jakubowski.noteme.exceptions.UserDoesNotOwnTheNoteException;
 import jan.jakubowski.noteme.services.dto.NoteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,12 +41,10 @@ public class NoteService {
                 .collect(Collectors.toList());
     }
 
-    public List<NoteDTO> fetchUserNotes(String login) {
+    public Page<NoteDTO> fetchUserNotes(String login, Pageable pageable) {
         return noteRepository
-                .findByAuthorLogin(login)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .findByAuthorLogin(login, pageable)
+                .map(this::mapToDTO);
     }
 
     public NoteDTO addNoteToUser(NoteDTO dto, String login) throws UserDoesNotExistException {
@@ -66,7 +66,7 @@ public class NoteService {
     public NoteDTO modifyNote(String login, Long noteId, Map<String, Object> updates) {
         if (userOwnTheNote(login, noteId)) {
 
-            Note note = noteRepository.getOne(noteId);
+            Note note = noteRepository.getOneById(noteId).orElseThrow(UserDoesNotExistException::new);
 
             if (updates.containsKey("title")) {
                 note.setTitle((String) updates.get("title"));

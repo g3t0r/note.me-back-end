@@ -7,6 +7,7 @@ import jan.jakubowski.noteme.services.NoteService;
 import jan.jakubowski.noteme.services.dto.NoteDTO;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,10 +45,10 @@ public class NoteController {
 
     @GetMapping("/api/users/{user}/notes")
     @ResponseBody
-    public ResponseEntity notesFromUser(@PathVariable(name = "user") String user) {
+    public ResponseEntity notesFromUser(@PathVariable(name = "user") String user, Pageable pageable) {
 
         if (isLoggedUser(user)) {
-            return ResponseEntity.ok(noteService.fetchUserNotes(user));
+            return ResponseEntity.ok(noteService.fetchUserNotes(user, pageable));
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
