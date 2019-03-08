@@ -54,6 +54,16 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    @GetMapping("/api/users/{user}/notes/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public NoteDTO getNote(@PathVariable(name = "user") String user, @PathVariable(name = "id") Long id) {
+        if (isLoggedUser(user)) {
+            return noteService.getNoteFromUser(user, id);
+        }
+        throw new AccessingDifferentUserException();
+    }
+
     @PostMapping("/api/users/{user}/notes")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

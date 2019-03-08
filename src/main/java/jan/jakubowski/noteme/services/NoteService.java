@@ -47,6 +47,14 @@ public class NoteService {
                 .map(this::mapToDTO);
     }
 
+    public NoteDTO getNoteFromUser(String login, Long id) {
+        if(userOwnTheNote(login, id)) {
+            Note result = noteRepository.getOneById(id).orElseThrow(UserDoesNotOwnTheNoteException::new);
+            return mapToDTO(result);
+        }
+        throw new UserDoesNotOwnTheNoteException();
+    }
+
     public NoteDTO addNoteToUser(NoteDTO dto, String login) throws UserDoesNotExistException {
         User user = userRepository
                 .getOneByLogin(login)
