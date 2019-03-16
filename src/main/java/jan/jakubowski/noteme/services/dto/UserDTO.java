@@ -3,7 +3,9 @@ package jan.jakubowski.noteme.services.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 
 public class UserDTO {
 
@@ -23,6 +25,7 @@ public class UserDTO {
 
     public long id;
     @NotNull
+    @Pattern(regexp = "([A-Za-z0-9])")
     public String login;
     @Size(min = 3, message = "Login have to be at least 4 characters long")
     @NotNull

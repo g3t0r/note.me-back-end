@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/api/users/register")
 @Validated
@@ -21,7 +23,7 @@ public class RegisterController {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO registerUser(@RequestBody UserDTO userDTO) {
+    public UserDTO registerUser(@RequestBody @Valid UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
 
