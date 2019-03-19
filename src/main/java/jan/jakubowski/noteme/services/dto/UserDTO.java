@@ -25,14 +25,14 @@ public class UserDTO {
 
     public long id;
     @NotNull
-    @Pattern(regexp = "([A-Za-z0-9])")
+    @Pattern(regexp = "([A-Za-z0-9]){3,}")
     public String login;
-    @Size(min = 3, message = "Login have to be at least 4 characters long")
+    @Size(min = 3, message = "Login have to be at least 3 characters long")
     @NotNull
     @Email
     public String email;
     @NotNull
-    @Size(min = 4, message = "Password have to be at least 4 characters long")
+    @Size(min = 3, message = "Password have to be at least 3 characters long")
     public String password;
     public boolean accountNonExpired;
     public boolean accountNonLocked;
