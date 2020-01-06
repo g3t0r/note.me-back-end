@@ -25,6 +25,9 @@ public class NoteService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NoteEncryptionService noteEncryptionService;
+
     public List<NoteDTO> findByContentContainingIgnoreCase(String login, String phrase) {
         return noteRepository
                 .findByAuthorLoginAndContentContainingIgnoreCase(login, phrase)
@@ -44,13 +47,14 @@ public class NoteService {
     public Page<NoteDTO> fetchUserNotes(String login, Pageable pageable) {
         return noteRepository
                 .findByAuthorLogin(login, pageable)
-                .map(this::mapToDTO);
+                .map(this::mapToDTO)
+                .map(noteEncryptionService::decryptNote);
     }
 
     public NoteDTO getNoteFromUser(String login, Long id) {
-        if(userOwnTheNote(login, id)) {
+        if (userOwnTheNote(login, id)) {
             Note result = noteRepository.getOneById(id).orElseThrow(UserDoesNotOwnTheNoteException::new);
-            return mapToDTO(result);
+            return noteEncryptionService.decryptNote(mapToDTO(result));
         }
         throw new UserDoesNotOwnTheNoteException();
     }
@@ -59,6 +63,8 @@ public class NoteService {
         User user = userRepository
                 .getOneByLogin(login)
                 .orElseThrow(UserDoesNotExistException::new);
+
+        dto = noteEncryptionService.encryptNote(dto);
         Note result = noteRepository.save(new Note(0, dto.title, dto.content, user));
         return mapToDTO(result);
     }
@@ -84,7 +90,9 @@ public class NoteService {
                 note.setContent((String) updates.get("content"));
             }
 
-            return mapToDTO(noteRepository.save(note));
+            note = noteEncryptionService.encryptNote(note);
+
+            return noteEncryptionService.decryptNote(mapToDTO(noteRepository.save(note)));
         }
 
         throw new UserDoesNotOwnTheNoteException();
